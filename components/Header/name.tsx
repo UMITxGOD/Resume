@@ -1,11 +1,12 @@
 interface NameProps {
-    name:string,
+    firstName:string,
+    lastName:string
 }
 const Name : React.FC<NameProps>  = ({
-name
+firstName,lastName
 }) =>{
     return <h1 className=" text-center font-bold text-3xl mt-10">
-    {name}
+    {firstName}{" "}{lastName}
   </h1>
 }
 export default Name ;

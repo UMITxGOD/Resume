@@ -1,12 +1,12 @@
 import Box from "../SideContent/Box";
 
 interface ContentBoxProps {
-    heading :string , 
-    subheading:string , 
-    title:string , 
-    duration:string , 
-    location:string ,
-    description:string,
+    heading? :string , 
+    subheading?:string , 
+    title?:string , 
+    duration?:string , 
+    location?:string ,
+    description?:string,
     bulletpoints?:string[],
  }
  const ContentBox : React.FC<ContentBoxProps>  = ({

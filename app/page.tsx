@@ -3,20 +3,37 @@ import Name from "@/components/Header/name";
 import Title from "@/components/Header/title";
 import Box from "@/components/SideContent/Box";
 import SideContent from "@/components/SideContent/SideContent";
-import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import PlaceOutlinedIcon from '@mui/icons-material/PlaceOutlined';
+import {BsFillTelephoneFill} from "react-icons/bs"
+import {MdEmail} from "react-icons/md"
+import {IoLocationSharp } from "react-icons/io5"
+import {LiaLinkedinIn} from "react-icons/lia"
+import {ImGithub} from "react-icons/im"
+import {AiOutlineTwitter} from "react-icons/ai"
+import {BiSolidContact} from "react-icons/bi"
+
+
+import demodata from "@/data";
 import MainContent from "@/components/MainContent/MainContent";
 import ContentBox from "@/components/MainContent/ContentBox";
-
+import { useRouter } from "next/navigation";
 export default function HomePage(){
+  const router = useRouter();
 const contacts = [
-  {Icons : LocalPhoneIcon , info:"612-345-6789"},
-  {Icons : EmailOutlinedIcon , info:"yourname@email.com"},
-  {Icons : PlaceOutlinedIcon , info:"New York ,NY"},
-
+  {Icons : BsFillTelephoneFill, info:demodata.phone_number,link:'#'},
+  {Icons : MdEmail , info:demodata.email,link:demodata.email},
+  {Icons : IoLocationSharp , info:`${demodata.city} ,${demodata.country}`,link:'#'},
+  {Icons : LiaLinkedinIn , info:demodata.linkedin,link:demodata.linkedin},
+  {Icons :  BiSolidContact, info:demodata.portfolio_link,link:demodata.portfolio_link}
 
 ]
+function getDuration(start:Date , end:Date){
+
+const formattedStartDate = start.toLocaleDateString('en-US',{day:"numeric", month:"short"});
+const formattedEndDate = end.toLocaleDateString('en-US', {day:"numeric" , month:"short"});
+
+const formattedDateRange = `${formattedStartDate} - ${formattedEndDate}`;
+return formattedDateRange ; 
+}
   return (
   <>
     <div className="
@@ -27,10 +44,11 @@ const contacts = [
      
      ">
       {/* Name */}
-        <Name name={"Name Surname"}/>
+        <Name firstName={demodata.first_name} 
+           lastName = {demodata.last_name}/>
 
         {/* Title */}
-        <Title title={" Professional Title"} />
+        <Title title={demodata.profession} />
         {/* Wrapper */}
         <div className=" flex mx-3 gap-2 mt-3">
           {/* sidebar */}
@@ -47,7 +65,11 @@ const contacts = [
                    justify-center items-center
                     gap-3
                     text-pink-500
-                    ">
+                    cursor-pointer
+                    "
+                    onClick={()=>{
+                      router.push(`${contact.link}`)
+                    }}>
                       {<contact.Icons
                       className="text-pink-600 "/>}{contact.info}
                   </li>)
@@ -57,33 +79,102 @@ const contacts = [
 
             <Box>
               <h1 className=" text-xl font-bold ">SUMMARY</h1>
-              <p className=" line leading-7 my-3">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus natus explicabo ratione error pariatur magni nesciunt ex, voluptate rerum dicta dolores quam soluta neque! Ut, repellat repellendus! Repudiandae, aut! Sapiente eius accusamus ipsum explicabo possimus?
+                <p className=" line leading-7 my-3">
+                  {demodata.summary}
               </p>
+            </Box>
+            <Box className="gap-4">
+              <h1 className=" text-xl font-bold ">KEY SKILLS</h1>
+                  {
+                    demodata.skills.map(skill => <ul className="space-y-2" key={skill.skills_id}>
+                      {  skill.non_technical_skills
+                            .split(",")
+                            .map(nonTech => <li key={nonTech}>
+                              {
+                                nonTech
+                              }
+                      </li>)}
+                    </ul>)
+                  }
+            </Box>
+
+            <Box className="gap-4">
+              <h1 className=" text-xl font-bold ">TECHNICAL SKILLS</h1>
+                  {
+                    demodata.skills.map(skill => <ul className="space-y-2 flex  items-center space-x-2" key={skill.skills_id}>
+                      <h5 className="font-bold pt-2">Languges :{" "}</h5>
+                      {  skill.non_technical_skills
+                            .split(",")
+                            .map(nonTech => <li key={nonTech}>
+                              {
+                                nonTech
+                              }
+                      </li>)}
+                    </ul>)
+                  }
             </Box>
 
           </SideContent>
           <MainContent>
-            <ContentBox
-            key={"contentBox"}
-            heading="Heading"
-            location="puri"
-            subheading="subHeading"
-            title="title"
-            bulletpoints={["point1" , "point2"]}
-            duration="july 19 - 13"
-            description="description"
+          <h1 className="text-2xl 
+            font-bold px-8 ">
+              {"PROFESSIONAL EXPERIENCE"}
+              </h1>
+              {
+                demodata.work_experience.map((works)=><li className="list-none" key={works.work_id}>
+                   <ContentBox
+            key={works.work_id}
+            location={works.company_location}
+            subheading={works.company_name}
+            title={works.job_title}
+            duration={getDuration(works.start_date ,works.end_date)}
+            description={works.Description}
             />
-            <ContentBox
-            key={"contentBox"}
-            heading="Heading"
-            location="puri"
-            subheading="subHeading"
-            title="title"
-            bulletpoints={["point1" , "point2"]}
-            duration="july 19 - 13"
-            description="description"
+                </li>)
+              }
+              
+              <h1 className="text-2xl 
+            font-bold px-8 ">
+              {"EDUCATION"}
+              </h1>
+              {
+                demodata.education.map((edu)=><li className="list-none" key={edu.education_id}>
+                   <ContentBox
+            key={edu.education_id}
+            location={edu.school_location}
+            subheading={edu.degree}
+            title={edu.school_name}
+            duration={getDuration(edu.degree_start_date ,edu.degree_end_date)}
+            description={edu.field_of_study}
             />
+                </li>)
+              }
+              <h1 className="text-2xl 
+            font-bold px-8 ">
+              {"PROJECTS"}
+              </h1>
+              {
+                demodata.projects.map((pro)=><li className="list-none" key={pro.project_id}>
+                   <ContentBox
+            key={pro.project_id}
+            title={pro.project_name}
+            description={pro.description}
+            />
+                </li>)
+              }
+            <h1 className="text-2xl 
+            font-bold px-8 ">
+              {"CERTIFICATES"}
+              </h1>
+              {
+                demodata.certificates.map((certificate)=><li className="list-none" key={certificate.certi_id}>
+                   <ContentBox
+           key={certificate.certi_id}
+            title={certificate.certi_name}
+            duration={getDuration(certificate.certi_start_date , certificate.certi_end_date)}
+            />
+                </li>)
+              }
             
           </MainContent>
           
